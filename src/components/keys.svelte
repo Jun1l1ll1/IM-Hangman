@@ -1,10 +1,15 @@
 
 <script>
-    import { fails, right, wrong, theWord } from '$lib/stores';
+    import { fails, right, wrong, theWord, hasWon } from '$lib/stores';
 
     let alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZÆØÅ';
     let hide = false;
 
+
+    let word = '';
+    theWord.subscribe(value => {
+        word = value;
+    })
 
     let wrongLetters = '';
     wrong.subscribe(value => {
@@ -20,11 +25,26 @@
     fails.subscribe(value => {
         failNum = value;
     })
+    let vicroty = false;
+    hasWon.subscribe(value => {
+        vicroty = value;
+    })
     
+    function won() {
+        for (let i = 0; i < word.length; i++) {
+            if (!rightLetters.includes(word[i]) && word[i] != '' && word[i] != ' ') {
+                hasWon.set(false);
+                return false;
+            }
+        }
+        hasWon.set(true);
+        return true;
+    }
+
 
     // @ts-ignore
     function keyDown(e) {
-        if ('abcdefghijklmnopqrstuvwxyzæøå'.includes(e.key)) {
+        if ('abcdefghijklmnopqrstuvwxyzæøå'.includes(e.key) && !vicroty && failNum != 6) {
             checkKey(e.key.toUpperCase());
         };
     }
@@ -33,8 +53,9 @@
     // @ts-ignore
     function checkKey(key) {
         if (!wrongLetters.includes(key)) {
-            if (theWord.includes(key)) { 
+            if (word.includes(key)) { 
                 right.update(value => value + key);
+                won();
             } else {
                 wrong.update(value => value + key);
                 failNum < 6 ? fails.update(value => value + 1) : '';
@@ -49,7 +70,7 @@
             fails.subscribe(value => {
                 failNum = value;
             })
-            console.log(failNum, wrongLetters, rightLetters);
+            // console.log(failNum, wrongLetters, rightLetters);
         }
     }
 </script>
@@ -61,11 +82,11 @@
 
         {#each alphabet as key}
             <!-- svelte-ignore a11y-click-events-have-key-events -->
-            <div on:click={() => checkKey(key)} class:hidden="{hide}" class="bg-zinc-800 sm:bg-zinc-900 hover:bg-black hover:text-red-500 w-full h-fit py-3 sm:py-2 text-center rounded-lg">{key}</div>
+            <div on:click={() => checkKey(key)} class:hidden="{hide}" class="{wrongLetters.includes(key) ? 'bg-zinc-700' : rightLetters.includes(key) ? 'bg-red-500' : 'bg-zinc-800 sm:bg-zinc-900'} {!rightLetters.includes(key) && !wrongLetters.includes(key) ? 'hover:bg-black hover:text-red-500' : ''}  w-full h-fit py-3 sm:py-2 text-center rounded-lg">{key}</div>
         {/each}
 
         <!-- svelte-ignore a11y-click-events-have-key-events -->
-        <div on:click={() => hide = !hide} class:col-span-2="{hide}" class:col-start-2="{hide}" class:hidden="{!hide}" class="{!hide ? 'sm:bg-zinc-900' : ''} sm:block bg-zinc-800 sm:bg-zinc-900 lg:bg-zinc-900 text-zinc-700 hover:bg-black hover:text-red-500 w-full h-fit py-3 sm:py-2 text-center rounded-lg place-self-end">{#if hide}+{:else}-{/if}</div>
+        <div on:click={() => hide = !hide} class:col-span-2="{hide}" class:col-start-2="{hide}" class:hidden="{!hide}" class="{!hide ? 'sm:bg-zinc-900' : 'bg-zinc-800 lg:bg-zinc-900'} sm:block text-zinc-700 hover:bg-black hover:text-red-500 w-full h-fit py-3 sm:py-2 text-center rounded-lg place-self-end">{#if hide}+{:else}-{/if}</div>
 
     </div>
 </div>

@@ -2,6 +2,7 @@
     import NotRightBox from "../components/notRightBox.svelte";
     import Keys from "../components/keys.svelte";
     import Word from "../components/word.svelte";
+    import WinLose from "../components/winLose.svelte";
 
     import { fails } from '$lib/stores';
 
@@ -37,7 +38,7 @@
             <img class="w-5/6 mt-5" src="src/lib/images/kliff/kliff-{failNum}.png" alt="Mann = {failNum}/6">
         </div>
         
-        <div class="w-full h-16 sm:mt-20 flex items-end justify-center text-3xl sm:text-5xl">
+        <div class="w-full h-16 mt-6 sm:mt-20 flex-none overflow-x-auto whitespace-nowrap sm:flex sm:items-end sm:justify-center text-2xl sm:text-5xl">
             <Word />
         </div>
     </div>
@@ -50,5 +51,8 @@
             <NotRightBox />
         </div>
     </div>
+
+    <WinLose/>
+
 </div>
 
