@@ -1,6 +1,5 @@
 
 import words from "$lib/data/words.json";
-
 import { writable } from "svelte/store";
 
 export let theWord = writable(words[Math.floor(Math.random() * (words.length))].toUpperCase());

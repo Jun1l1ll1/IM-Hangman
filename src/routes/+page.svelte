@@ -20,7 +20,6 @@
     :global(html) {
         background-color: theme(colors.zinc.800);
         color: theme(colors.slate.100);
-
     }
 </style>
 <div class="flex items-center justify-center w-screen h-screen p-2 sm:p-10 lg:space-x-10">
